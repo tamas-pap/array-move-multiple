@@ -1,6 +1,6 @@
 {
   "name": "array-move-multiple",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Move multiple items in an array to a new position",
   "main": "bundle.js",
   "scripts": {
