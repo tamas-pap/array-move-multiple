@@ -29,11 +29,12 @@ const todo2 = { id: 2, isCompleted: true, name: 'Todo 2' };
 const todo3 = { id: 3, isCompleted: false, name: 'Todo 3' };
 const todo4 = { id: 4, isCompleted: false, name: 'Todo 4' };
 const todo5 = { id: 5, isCompleted: false, name: 'Todo 5' };
+const todoAddLater = { id: 5, isCompleted: false, name: 'Todo 5' };
 
 const todos = [todo1, todo2, todo3, todo4, todo5];
 
 describe('Move items by value', () => {
-  test('with default comparator', () => {
+  test('with the default comparator', () => {
     expect(arrayMoveByValue(todos, [todo1, todo5], 2)).toEqual([
       todo2,
       todo3,
@@ -43,11 +44,22 @@ describe('Move items by value', () => {
     ]);
   });
 
-  test('with a custom comparator', () => {
-    const comparateBy = value => value.id;
+  test('using compareBy', () => {
+    const compareBy = value => value.id;
 
     expect(
-      arrayMoveByValue(todos, [{ id: 1 }, { id: 5 }], 2, comparateBy),
+      arrayMoveByValue(todos, [{ id: 1 }, { id: 5 }], 2, { compareBy }),
     ).toEqual([todo2, todo3, todo1, todo5, todo4]);
+  });
+
+  test('using compareBy and useValues', () => {
+    const compareBy = value => value.id;
+
+    expect(
+      arrayMoveByValue(todos, [todo1, todo5, todoAddLater], 2, {
+        compareBy,
+        useValues: true,
+      }),
+    ).toEqual([todo2, todo3, todo1, todo5, todoAddLater, todo4]);
   });
 });

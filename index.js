@@ -1,12 +1,12 @@
 const normalizeToIndex = (toIndex, array, moveIndexes) =>
   Math.min(Math.max(0, toIndex), array.length - moveIndexes.length);
 
-const arrayMoveByIndex = (array, moveIndexes, toIndex) => {
-  const normalizedToIndex = normalizeToIndex(toIndex, array, moveIndexes);
+const arrayMoveByIndex = (array, indexes, toIndex, withValues) => {
+  const normalizedToIndex = normalizeToIndex(toIndex, array, indexes);
 
-  const moveValues = moveIndexes.map(moveIndex => array[moveIndex]);
+  const moveValues = withValues || indexes.map(moveIndex => array[moveIndex]);
   const dontMoveValues = array.filter(
-    (item, index) => moveIndexes.indexOf(index) === -1,
+    (item, index) => indexes.indexOf(index) === -1,
   );
 
   dontMoveValues.splice(normalizedToIndex, 0, ...moveValues);
@@ -15,15 +15,15 @@ const arrayMoveByIndex = (array, moveIndexes, toIndex) => {
 
 const arrayMoveByValue = (
   array,
-  moveValues,
+  values,
   toIndex,
-  compareBy = value => value,
+  { compareBy = value => value, useValues = false } = {},
 ) => {
-  const moveIndexes = moveValues.map(moveValue =>
+  const moveIndexes = values.map(moveValue =>
     array.findIndex(value => compareBy(value) === compareBy(moveValue)),
   );
 
-  return arrayMoveByIndex(array, moveIndexes, toIndex);
+  return arrayMoveByIndex(array, moveIndexes, toIndex, useValues && values);
 };
 
 exports.arrayMoveByIndex = arrayMoveByIndex;
