@@ -24,23 +24,31 @@
     throw new TypeError("Invalid attempt to spread non-iterable instance");
   }
 
+  var normalizeIndexes = function normalizeIndexes(indexes, array) {
+    return indexes.filter(function (index) {
+      return index >= 0 && index < array.length;
+    });
+  };
+
   var normalizeToIndex = function normalizeToIndex(toIndex, array, moveIndexes) {
     return Math.min(Math.max(0, toIndex), array.length - moveIndexes.length);
   };
 
-  var arrayMoveByIndex = function arrayMoveByIndex(array, indexes, toIndex, withValues) {
+  var arrayMoveByIndex = function arrayMoveByIndex(array, index, toIndex, withValues) {
+    var indexes = Array.isArray(index) ? index : [index];
+    var normalizedIndexes = normalizeIndexes(indexes, array);
     var normalizedToIndex = normalizeToIndex(toIndex, array, indexes);
-    var moveValues = withValues || indexes.map(function (moveIndex) {
+    var moveValues = withValues || normalizedIndexes.map(function (moveIndex) {
       return array[moveIndex];
     });
     var dontMoveValues = array.filter(function (item, index) {
-      return indexes.indexOf(index) === -1;
+      return normalizedIndexes.indexOf(index) === -1;
     });
     dontMoveValues.splice.apply(dontMoveValues, [normalizedToIndex, 0].concat(_toConsumableArray(moveValues)));
     return dontMoveValues;
   };
 
-  var arrayMoveByValue = function arrayMoveByValue(array, values, toIndex) {
+  var arrayMoveByValue = function arrayMoveByValue(array, value, toIndex) {
     var _ref = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {},
         _ref$compareBy = _ref.compareBy,
         compareBy = _ref$compareBy === void 0 ? function (value) {
@@ -49,6 +57,7 @@
         _ref$useValues = _ref.useValues,
         useValues = _ref$useValues === void 0 ? false : _ref$useValues;
 
+    var values = Array.isArray(value) ? value : [value];
     var moveIndexes = values.map(function (moveValue) {
       return array.findIndex(function (value) {
         return compareBy(value) === compareBy(moveValue);
