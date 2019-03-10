@@ -81,10 +81,10 @@ const todos = [todo1, todo2, todo3, todo4, todo5];
 
 describe('Move items by value', () => {
   test('using compareBy', () => {
-    const comparateBy = value => value.id;
+    const compareBy = value => value.id;
 
     expect(
-      arrayMoveByValue(todos, [{ id: 1 }, { id: 5 }], 2, comparateBy),
+      arrayMoveByValue(todos, [{ id: 1 }, { id: 5 }], 2, { compareBy }),
     ).toEqual([todo2, todo3, todo1, todo5, todo4]);
   });
 });
@@ -106,11 +106,14 @@ const todos = [todo1, todo2, todo3, todo4, todo5];
 
 describe('Move items by value', () => {
   test('using compareBy and useValues', () => {
-    const comparateBy = value => value.id;
+    const compareBy = value => value.id;
 
     expect(
-      arrayMoveByValue(todos, [{ id: 1 }, { id: 5 }], 2, comparateBy),
-    ).toEqual([todo2, todo3, todo1, todo5, todo4]);
+      arrayMoveByValue(todos, [todo1, todo5, todoAddLater], 2, {
+        compareBy,
+        useValues: true,
+      }),
+    ).toEqual([todo2, todo3, todo1, todo5, todoAddLater, todo4]);
   });
 });
 ```
