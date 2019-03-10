@@ -4,7 +4,8 @@ const normalizeIndexes = (indexes, array) =>
 const normalizeToIndex = (toIndex, array, moveIndexes) =>
   Math.min(Math.max(0, toIndex), array.length - moveIndexes.length);
 
-const arrayMoveByIndex = (array, indexes, toIndex, withValues) => {
+const arrayMoveByIndex = (array, index, toIndex, withValues) => {
+  const indexes = Array.isArray(index) ? index : [index];
   const normalizedIndexes = normalizeIndexes(indexes, array);
   const normalizedToIndex = normalizeToIndex(toIndex, array, indexes);
 
@@ -21,10 +22,11 @@ const arrayMoveByIndex = (array, indexes, toIndex, withValues) => {
 
 const arrayMoveByValue = (
   array,
-  values,
+  value,
   toIndex,
   { compareBy = value => value, useValues = false } = {},
 ) => {
+  const values = Array.isArray(value) ? value : [value];
   const moveIndexes = values.map(moveValue =>
     array.findIndex(value => compareBy(value) === compareBy(moveValue)),
   );
