@@ -1,12 +1,18 @@
+const normalizeIndexes = (indexes, array) =>
+  indexes.filter(index => index >= 0 && index < array.length);
+
 const normalizeToIndex = (toIndex, array, moveIndexes) =>
   Math.min(Math.max(0, toIndex), array.length - moveIndexes.length);
 
 const arrayMoveByIndex = (array, indexes, toIndex, withValues) => {
+  const normalizedIndexes = normalizeIndexes(indexes, array);
   const normalizedToIndex = normalizeToIndex(toIndex, array, indexes);
 
-  const moveValues = withValues || indexes.map(moveIndex => array[moveIndex]);
+  const moveValues =
+    withValues || normalizedIndexes.map(moveIndex => array[moveIndex]);
+
   const dontMoveValues = array.filter(
-    (item, index) => indexes.indexOf(index) === -1,
+    (item, index) => normalizedIndexes.indexOf(index) === -1,
   );
 
   dontMoveValues.splice(normalizedToIndex, 0, ...moveValues);
